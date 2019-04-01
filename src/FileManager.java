@@ -46,28 +46,22 @@ public class FileManager {
             int idx = 0;
             for (String word : parsedData.getInput()) {
                 int count = data.getWordCount(word);
-                resultData.count += count;
-                if (idx == 0) {
-                    idx++;
-                    continue;
-                }
-                switch (parsedData.getModes()[idx]) {
-                    case ParseData.AND:
-                        if (count == 0) {
-                            resultData.invalid = false;
-                        }
-                        break;
-                    case ParseData.OR:
-                        break;
-                    case ParseData.NOT:
+                int mode = parsedData.getMode(idx);
+                if ((mode & ParseData.AND) == ParseData.AND) {
+                    if ((mode & ParseData.NOT) == ParseData.NOT) {
                         if (count > 0) {
-                            resultData.invalid = false;
+                            resultData.invalid = true;
                         }
-                        break;
+                    } else {
+                        if (count == 0) {
+                            resultData.invalid = true;
+                        }
+                    }
                 }
+                resultData.count += count;
                 idx++;
             }
-            if (!resultData.invalid) {
+            if (resultData.invalid) {
                 resultData.count = 0;
             }
             pq.add(resultData);

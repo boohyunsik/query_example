@@ -4,6 +4,8 @@ import java.util.List;
 public class Parser {
 
     public ParseData parse(String query) {
+        ParseData data = new ParseData();
+
         String[] arr = query.split("[&|! ]");
         List<String> list = new ArrayList<>();
         for (int i=0; i < arr.length; i++){
@@ -17,26 +19,24 @@ public class Parser {
             result[index++] = str;
         }
 
-        int[] modes = new int[arr.length];
-        modes[0] = ParseData.DEFAULT;
+
+        data.setMode(0, ParseData.OR);
         int idx = 1;
         for (int i=0; i<query.length(); i++) {
             switch (query.charAt(i)) {
                 case '&':
-                    modes[idx++] = ParseData.AND;
+                    data.setMode(idx, ParseData.AND);
                     break;
                 case '|':
-                    modes[idx++] = ParseData.OR;
+                    data.setMode(idx, ParseData.OR);
                     break;
                 case '!':
-                    modes[idx++] = ParseData.NOT;
+                    data.setMode(idx, data.getMode(idx) | ParseData.NOT);
                     break;
             }
         }
 
-        ParseData data = new ParseData();
         data.setInput(result);
-        data.setModes(modes);
         return data;
     }
 }

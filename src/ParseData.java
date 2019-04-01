@@ -1,12 +1,16 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public class ParseData {
 
-    public final static int DEFAULT = 100;
-    public final static int AND = 101;
-    public final static int OR = 102;
-    public final static int NOT = 103;
+    public final static int DEFAULT = 1;
+    public final static int AND = 2;
+    public final static int OR = 4;
+    public final static int NOT = 8;
 
     private String[] input;
     private int[] modes;
+    private Map<Integer, Integer> modeMap = new HashMap<>();
 
     public void setInput(String[] strs) {
         input = strs;
@@ -22,5 +26,13 @@ public class ParseData {
 
     public int[] getModes() {
         return modes;
+    }
+
+    public void setMode(int index, int value) {
+        modeMap.put(index, value);
+    }
+
+    public int getMode(int index) {
+        return modeMap.get(index);
     }
 }
